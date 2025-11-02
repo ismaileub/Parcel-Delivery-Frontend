@@ -1,6 +1,7 @@
 import App from "@/App";
+import TrackParcel from "@/components/modules/TrackParcel";
 import Login from "@/page/Login";
-import Register from "@/page/REgister";
+import Register from "@/page/Register";
 import { createBrowserRouter } from "react-router";
 export const router = createBrowserRouter([
   {
@@ -11,6 +12,10 @@ export const router = createBrowserRouter([
       //   Component: About,
       //   path: "about",
       // },
+      {
+        path: "track-parcel",
+        Component: TrackParcel,
+      },
     ],
   },
   {

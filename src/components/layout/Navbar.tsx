@@ -18,10 +18,10 @@ import {
 import { useAppDispatch } from "@/redux/hook";
 import { Link } from "react-router";
 
-// Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/track-Parcel", label: "Track parcel" },
 ];
 
 export default function Navbar() {
@@ -38,9 +38,12 @@ export default function Navbar() {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
+      <div className="container mx-auto px-4 flex h-10 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
+          <button className="text-3xl font-semibold text-blue-500">
+            <p>TrustTrack</p>
+          </button>
           {/* Mobile menu trigger */}
           <Popover>
             <PopoverTrigger asChild>
@@ -49,31 +52,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
               >
-                <svg
-                  className="pointer-events-none"
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 12L20 12"
-                    className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
-                  />
-                </svg>
+                <p>TrustTrack</p>
               </Button>
             </PopoverTrigger>
             <PopoverContent align="start" className="w-36 p-1 md:hidden">
@@ -92,7 +71,6 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90"></a>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
@@ -110,23 +88,26 @@ export default function Navbar() {
             </NavigationMenu>
           </div>
         </div>
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          <small> {email} </small>
 
+        <div className="flex items-center gap-2">
           {isLoading ? (
             <> Loading... </>
           ) : (
             <>
               {email ? (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="text-sm cursor-pointer"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
+                <div>
+                  <Link className="mr-3" to={"/dashboard"}>
+                    Dashboard
+                  </Link>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="text-sm cursor-pointer"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </div>
               ) : (
                 <Link to="/login">
                   <Button variant="default">Log In</Button>
