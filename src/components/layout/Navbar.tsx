@@ -10,6 +10,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
 import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -19,6 +25,17 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
+  const { data, isLoading } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+
+  const email = data?.data?.email;
+
+  const handleLogout = async () => {
+    await logout(undefined).unwrap(); // wait for API call
+    dispatch(authApi.util.resetApiState()); // clear RTKQ cache
+  };
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
@@ -95,9 +112,28 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button asChild className="text-sm">
-            <Link to="/login">Login</Link>
-          </Button>
+          <small> {email} </small>
+
+          {isLoading ? (
+            <> Loading... </>
+          ) : (
+            <>
+              {email ? (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="text-sm cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Link to="/login">
+                  <Button variant="default">Log In</Button>
+                </Link>
+              )}
+            </>
+          )}
         </div>
       </div>
     </header>

@@ -1,14 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -20,17 +27,15 @@ import { toast } from "sonner";
 
 const registerSchema = z
   .object({
-    name: z
-      .string()
-      .min(3, {
-        error: "Name is too short",
-      })
-      .max(50),
+    name: z.string().min(3, { error: "Name is too short" }).max(50),
     email: z.email(),
     password: z.string().min(8, { error: "Password is too short" }),
     confirmPassword: z
       .string()
       .min(8, { error: "Confirm Password is too short" }),
+    role: z.enum(["sender", "receiver"], {
+      required_error: "Please select a role",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
@@ -51,6 +56,7 @@ export function RegisterForm({
       email: "",
       password: "",
       confirmPassword: "",
+      role: undefined,
     },
   });
 
@@ -59,15 +65,23 @@ export function RegisterForm({
       name: data.name,
       email: data.email,
       password: data.password,
+      role: data.role,
     };
 
     try {
       const result = await register(userInfo).unwrap();
       console.log(result);
       toast.success("User created successfully");
-      navigate("/verify");
-    } catch (error) {
+      navigate("/");
+    } catch (error: any) {
       console.error(error);
+      toast.error("Failed to create user");
+      const errorMsg =
+        error?.data?.errorSources?.[0]?.message ||
+        error?.data?.message ||
+        "Registration failed!";
+
+      toast.error(errorMsg);
     }
   };
 
@@ -92,13 +106,11 @@ export function RegisterForm({
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="email"
@@ -112,13 +124,11 @@ export function RegisterForm({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="password"
@@ -128,13 +138,11 @@ export function RegisterForm({
                   <FormControl>
                     <Password {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="confirmPassword"
@@ -144,13 +152,37 @@ export function RegisterForm({
                   <FormControl>
                     <Password {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* ✅ Role Selection Field */}
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose your role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="sender">Sender</SelectItem>
+                      <SelectItem value="receiver">Receiver</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit" className="w-full">
               Submit
             </Button>

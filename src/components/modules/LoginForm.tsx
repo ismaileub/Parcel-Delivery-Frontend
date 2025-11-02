@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
@@ -26,13 +26,11 @@ export function LoginForm({
     try {
       const res = await login(data).unwrap();
       console.log(res);
+      toast.success("Logged in Success");
+      navigate("/");
     } catch (err: any) {
+      toast.error(err.data.message);
       console.error(err);
-
-      if (err.status === 401) {
-        toast.error("Your account is not verified");
-        navigate("/verify", { state: data.email });
-      }
     }
   };
 
