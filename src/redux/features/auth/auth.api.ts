@@ -33,12 +33,30 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["USER"],
     }),
 
+    // auth.api.ts
     getAllUsers: builder.query({
-      query: () => ({
-        url: "/user",
+      query: (params?: { page?: number; limit?: number }) => {
+        if (params?.page && params?.limit) {
+          return {
+            url: `/users/all-users?page=${params.page}&limit=${params.limit}`,
+            method: "GET",
+          };
+        }
+
+        return {
+          url: `/users/all-users`,
+          method: "GET",
+        };
+      },
+      providesTags: ["USER"],
+    }),
+
+    getReceiver: builder.query({
+      query: (email: string) => ({
+        url: `/users/getByMail?email=${email}`,
         method: "GET",
       }),
-      providesTags: ["USER"],
+      providesTags: ["PARCEL"],
     }),
   }),
 });
@@ -46,7 +64,8 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
-
+  useGetAllUsersQuery,
   useUserInfoQuery,
   useLogoutMutation,
+  useLazyGetReceiverQuery,
 } = authApi;

@@ -4,32 +4,25 @@ export const parcelApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createParcel: builder.mutation({
       query: (createParcel) => ({
-        url: "/parcels/create",
+        url: "/parcels/create-parcel",
         method: "POST",
         data: createParcel,
       }),
       invalidatesTags: ["PARCEL"],
     }),
 
-    getMyParcels: builder.query({
+    //get sender all parcel
+    getSenderAllParcel: builder.query({
       query: () => ({
-        url: "/parcels/my-parcels",
+        url: "/parcels/sender/all",
         method: "GET",
       }),
       providesTags: ["PARCEL"],
     }),
 
-    getIncomingParcels: builder.query({
+    getReceiverParcels: builder.query({
       query: () => ({
-        url: "/parcels/incoming",
-        method: "GET",
-      }),
-      providesTags: ["PARCEL"],
-    }),
-
-    getDeliveredParcels: builder.query({
-      query: (status: string = "Delivered") => ({
-        url: `/parcels/my-parcels?status=${status}`,
+        url: "/parcels/receiver/all",
         method: "GET",
       }),
       providesTags: ["PARCEL"],
@@ -45,36 +38,34 @@ export const parcelApi = baseApi.injectEndpoints({
 
     confirmParcel: builder.mutation({
       query: ({ id }) => ({
-        url: `/parcels/confirm/${id}`,
+        url: `parcels/receiver/confirm-delivery/${id}`,
         method: "PATCH",
       }),
       invalidatesTags: ["PARCEL"],
     }),
 
     getAllParcels: builder.query({
-      query: () => ({
-        url: "/parcels",
-        method: "GET",
-      }),
+      query: (params?: {
+        page?: number;
+        limit?: number;
+        sortBy?: string;
+        sortOrder?: string;
+      }) => {
+        if (params?.page && params?.limit) {
+          return {
+            url: `/parcels/admin/all?page=${params.page}&limit=${params.limit}&sortBy=${params.sortBy}&sortOrder=${params.sortOrder}`,
+            method: "GET",
+          };
+        }
+        //  No pagination or sorting
+        return {
+          url: `/parcels/admin/all`,
+          method: "GET",
+        };
+      },
       providesTags: ["PARCEL"],
     }),
 
-    blockParcel: builder.mutation({
-      query: ({ id }) => ({
-        url: `/parcels/block/${id}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["PARCEL"],
-    }),
-
-    unBlockParcel: builder.mutation({
-      query: ({ id }) => ({
-        url: `/parcels/unblock/${id}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["PARCEL"],
-    }),
-    //track
     trackParcelByTid: builder.query({
       query: (id: string) => ({
         url: `/parcels/track/${id}`,
@@ -84,10 +75,10 @@ export const parcelApi = baseApi.injectEndpoints({
     }),
 
     updateParcelStatus: builder.mutation({
-      query: ({ id, status }) => ({
-        url: `/parcels/status/${id}`,
+      query: ({ id, updateData }) => ({
+        url: `/parcels/update-status/${id}`,
         method: "PATCH",
-        body: { currentStatus: status },
+        data: updateData,
       }),
       invalidatesTags: ["PARCEL"],
     }),
@@ -96,14 +87,13 @@ export const parcelApi = baseApi.injectEndpoints({
 
 export const {
   useCreateParcelMutation,
-  useGetMyParcelsQuery,
   useCancelParcelMutation,
-  useGetIncomingParcelsQuery,
+  useGetReceiverParcelsQuery,
   useConfirmParcelMutation,
-  useGetDeliveredParcelsQuery,
+
   useGetAllParcelsQuery,
-  useBlockParcelMutation,
-  useUnBlockParcelMutation,
+
   useLazyTrackParcelByTidQuery,
   useUpdateParcelStatusMutation,
+  useGetSenderAllParcelQuery,
 } = parcelApi;

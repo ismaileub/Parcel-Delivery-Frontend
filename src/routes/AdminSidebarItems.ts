@@ -1,41 +1,31 @@
-// import AllParcels from "@/pages/admin/AllParcels";
-// import AllUsers from "@/pages/admin/AllUsers";
-import AdminOverview from "@/pages/admin/AdminOverview";
+import AdminOverview from "@/page/admin/AdminOverview";
+import AllParcels from "@/page/admin/AllParcels";
+import AllUsers from "@/page/admin/AllUsers";
 import type { ISidebarItems } from "@/types";
-import { lazy } from "react";
+// import { lazy } from "react";
 
-const AllUsers = lazy( ()=> import('@/pages/admin/AllUsers')) ;
-const AllParcels = lazy( ()=> import('@/pages/admin/AllParcels')) ;
+// const AllUsers = lazy(() => import("@/pages/admin/AllUsers"));
+// const AllParcels = lazy(() => import("@/pages/admin/AllParcels"));
 
-export const AdminSidebarItems : ISidebarItems[] = [
+export const AdminSidebarItems: ISidebarItems[] = [
   {
     title: "Admin Dashboard",
     items: [
       {
         title: "Overview",
         url: "/admin/overview",
-        component : AdminOverview,
+        component: AdminOverview,
       },
       {
         title: "All Users",
         url: "/admin/all-users",
-        component : AllUsers,
+        component: AllUsers,
       },
       {
         title: "All Parcels",
         url: "/admin/all-parcels",
-        component : AllParcels,
+        component: AllParcels,
       },
     ],
   },
-//   {
-//     title: "Tour Management",
-//     items: [
-//       {
-//         title: "Add Tour",
-//         url: "/admin/add-tour",
-//         component : AddTour
-//       },
-//     ],
-//   },
 ];

@@ -1,27 +1,26 @@
 // import CreatedParcels from "@/pages/sender/CreatedParcels";
-// import SenderOverview from "@/pages/sender/SenderOverview";
+import CreatedParcels from "@/page/sender/CreatedParcels";
+import SenderOverview from "@/page/sender/SenderOverview";
 import type { ISidebarItems } from "@/types";
-import { lazy } from "react";
+// import { lazy } from "react";
 
+// const SenderOverview = lazy( ()=> import('@/pages/sender/SenderOverview')) ;
+// const CreatedParcels = lazy( ()=> import('@/pages/sender/CreatedParcels')) ;
 
-const SenderOverview = lazy( ()=> import('@/pages/sender/SenderOverview')) ;
-const CreatedParcels = lazy( ()=> import('@/pages/sender/CreatedParcels')) ;
-
-export const SenderSidebarItems : ISidebarItems[] = [
+export const SenderSidebarItems: ISidebarItems[] = [
   {
     title: "Sender Dashboard Menu",
     items: [
       {
         title: "Overview",
         url: "/sender/sender-overview",
-        component : SenderOverview,
+        component: SenderOverview,
       },
       {
         title: "All Created parcels",
         url: "/sender/created-parcels",
-        component : CreatedParcels,
+        component: CreatedParcels,
       },
     ],
   },
-
 ];

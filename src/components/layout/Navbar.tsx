@@ -5,11 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { role } from "@/constant/role";
 import {
   authApi,
   useLogoutMutation,
@@ -17,106 +13,107 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
 
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/track-Parcel", label: "Track parcel" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/track-parcel", label: "Track Parcel", role: "PUBLIC" },
 ];
 
 export default function Navbar() {
   const { data, isLoading } = useUserInfoQuery(undefined);
+  const userRole = data?.data?.role;
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
-  const email = data?.data?.email;
-
   const handleLogout = async () => {
-    await logout(undefined).unwrap(); // wait for API call
-    dispatch(authApi.util.resetApiState()); // clear RTKQ cache
+    await logout(undefined).unwrap();
+    dispatch(authApi.util.resetApiState());
   };
 
-  return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 flex h-10 items-center justify-between gap-4">
-        {/* Left side */}
-        <div className="flex items-center gap-2">
-          <button className="text-3xl font-semibold text-blue-500">
-            <p>TrustTrack</p>
-          </button>
-          {/* Mobile menu trigger */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                className="group size-8 md:hidden"
-                variant="ghost"
-                size="icon"
-              >
-                <p>TrustTrack</p>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
-              <NavigationMenu className="max-w-none *:w-full">
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink asChild className="py-1.5">
-                        <Link to={link.href}>{link.label} </Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </PopoverContent>
-          </Popover>
-          {/* Main nav */}
-          <div className="flex items-center gap-6">
-            {/* Navigation menu */}
-            <NavigationMenu className="max-md:hidden">
-              <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      asChild
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-        </div>
+  const dashboardPath =
+    userRole === role.admin
+      ? "/admin"
+      : userRole === role.sender
+      ? "/sender"
+      : userRole === role.receiver
+      ? "/receiver"
+      : null;
 
-        <div className="flex items-center gap-2">
-          {isLoading ? (
-            <> Loading... </>
-          ) : (
-            <>
-              {email ? (
-                <div>
-                  <Link className="mr-3" to={"/dashboard"}>
-                    Dashboard
-                  </Link>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="text-sm cursor-pointer"
-                    onClick={handleLogout}
+  const visibleLinks = navigationLinks;
+
+  return (
+    <motion.header
+      className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/70 border-b border-gray-200 shadow-sm"
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+        {/* Brand */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-3"
+        >
+          <Link
+            to="/"
+            className="text-3xl font-bold text-primary tracking-tight"
+          >
+            Trust<span className="text-blue-600">Track</span>
+          </Link>
+        </motion.div>
+
+        {/* Links */}
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList className="flex gap-6">
+            {visibleLinks.map((link, index) => (
+              <NavigationMenuItem key={index}>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to={link.href}
+                    className="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-blue-600 after:transition-all after:duration-300"
                   >
-                    Logout
-                  </Button>
-                </div>
-              ) : (
-                <Link to="/login">
-                  <Button variant="default">Log In</Button>
+                    {link.label}
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* Auth Section */}
+        <div className="flex items-center gap-3">
+          {isLoading ? (
+            <span className="text-gray-500">Loading...</span>
+          ) : data?.data?.email ? (
+            <div className="flex items-center gap-3">
+              {dashboardPath && (
+                <Link
+                  to={dashboardPath}
+                  className="text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Dashboard
                 </Link>
               )}
-            </>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="shadow hover:opacity-90 transition"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow">
+                Log In
+              </Button>
+            </Link>
           )}
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

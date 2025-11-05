@@ -27,18 +27,18 @@ import { toast } from "sonner";
 
 const registerSchema = z
   .object({
-    name: z.string().min(3, { error: "Name is too short" }).max(50),
-    email: z.email(),
-    password: z.string().min(8, { error: "Password is too short" }),
+    name: z.string().min(3, { message: "Name is too short" }).max(50),
+    email: z.string().email(),
+    password: z.string().min(8, { message: "Password is too short" }),
     confirmPassword: z
       .string()
-      .min(8, { error: "Confirm Password is too short" }),
-    role: z.enum(["sender", "receiver"], {
-      required_error: "Please select a role",
+      .min(8, { message: "Confirm Password is too short" }),
+    role: z.enum(["SENDER", "RECEIVER"], {
+      message: "Invalid role selected",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Password do not match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -174,8 +174,8 @@ export function RegisterForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="sender">Sender</SelectItem>
-                      <SelectItem value="receiver">Receiver</SelectItem>
+                      <SelectItem value="SENDER">Sender</SelectItem>
+                      <SelectItem value="RECEIVER">Receiver</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

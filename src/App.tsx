@@ -5,7 +5,7 @@ import Navbar from "./components/layout/Navbar";
 
 function App() {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col max-w-7xl mx-auto">
       <Navbar />
       <div className="grow-1">
         <Outlet />
