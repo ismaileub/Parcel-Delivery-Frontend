@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Truck, Users, ShieldCheck, Clock } from "lucide-react";
+import HowItWorks from "./HowItWorks";
 
 export default function AboutUs() {
   return (
@@ -107,6 +108,10 @@ export default function AboutUs() {
               </motion.div>
             );
           })}
+        </div>
+
+        <div className="mt-20">
+          <HowItWorks />
         </div>
       </div>
     </section>

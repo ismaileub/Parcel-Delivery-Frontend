@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -26,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import SkeletonTable from "@/components/provider/SkeletonTable";
+import Pagination from "@/components/ui/pagination";
 
 const IncomingParcels = () => {
   const {
@@ -44,6 +46,14 @@ const IncomingParcels = () => {
     [];
   const totalItems = incomingParcels.length;
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedParcels = incomingParcels.slice(startIndex, endIndex);
+
   const handleConfirm = async (id: string) => {
     try {
       const res = await confirmParcel({ id }).unwrap();
@@ -59,7 +69,7 @@ const IncomingParcels = () => {
   if (isIncoming) return <SkeletonTable />;
 
   return (
-    <div className="max-w-6xl mx-auto mt-8 border border-slate-400 rounded-lg shadow">
+    <div className="max-w-7xl mx-auto mt-8 border border-slate-400 rounded-lg shadow">
       <h1 className="text-center py-4 text-xl font-semibold">
         All My Incoming Parcels ({totalItems})
       </h1>
@@ -81,7 +91,7 @@ const IncomingParcels = () => {
         </TableHeader>
 
         <TableBody>
-          {incomingParcels.map((item: any) => (
+          {paginatedParcels.map((item: any) => (
             <TableRow key={item._id}>
               <TableCell>{item.trackingId}</TableCell>
               <TableCell>{item.type}</TableCell>
@@ -107,10 +117,10 @@ const IncomingParcels = () => {
                     item.currentStatus === "Requested"
                       ? "bg-yellow-200 text-yellow-800"
                       : item.currentStatus === "Delivered"
-                      ? "bg-green-200 text-green-800"
-                      : item.currentStatus === "Cancelled"
-                      ? "bg-red-600 text-white"
-                      : "bg-gray-200 text-gray-800"
+                        ? "bg-green-200 text-green-800"
+                        : item.currentStatus === "Cancelled"
+                          ? "bg-red-600 text-white"
+                          : "bg-gray-200 text-gray-800"
                   }`}
                 >
                   {item.currentStatus}
@@ -156,6 +166,12 @@ const IncomingParcels = () => {
           ))}
         </TableBody>
       </Table>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };

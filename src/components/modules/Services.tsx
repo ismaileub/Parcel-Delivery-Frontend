@@ -30,7 +30,10 @@ const services = [
 
 export default function OurServices() {
   return (
-    <section className="py-20 bg-linear-to-b from-white to-blue-50">
+    <section
+      id="services"
+      className="py-20 bg-linear-to-b from-white to-blue-50"
+    >
       <div className="container mx-auto px-4 text-center">
         {/* Heading */}
         <motion.h2

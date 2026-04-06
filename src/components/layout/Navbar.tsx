@@ -19,6 +19,7 @@ const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
   { href: "/about", label: "About", role: "PUBLIC" },
   { href: "/track-parcel", label: "Track Parcel", role: "PUBLIC" },
+  { href: "/contact", label: "Contact", role: "PUBLIC" },
 ];
 
 export default function Navbar() {
@@ -27,8 +28,11 @@ export default function Navbar() {
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
+  console.log(data);
+
   const handleLogout = async () => {
     await logout(undefined).unwrap();
+    console.log("log out clicked");
     dispatch(authApi.util.resetApiState());
   };
 
@@ -36,16 +40,16 @@ export default function Navbar() {
     userRole === role.admin
       ? "/admin"
       : userRole === role.sender
-      ? "/sender"
-      : userRole === role.receiver
-      ? "/receiver"
-      : null;
+        ? "/sender"
+        : userRole === role.receiver
+          ? "/receiver"
+          : null;
 
   const visibleLinks = navigationLinks;
 
   return (
     <motion.header
-      className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/70 border-b border-gray-200 shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm"
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}

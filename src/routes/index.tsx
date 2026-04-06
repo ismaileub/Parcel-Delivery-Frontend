@@ -1,11 +1,13 @@
 import App from "@/App";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import TrackParcel from "@/components/modules/TrackParcel";
+import Contact from "@/components/modules/Contact";
 import UnAuthorized from "@/components/modules/UnAuthorized";
 import { withAuth } from "@/components/modules/withAuth";
 import { role } from "@/constant/role";
 import Login from "@/page/Login";
 import Register from "@/page/Register";
+import NotFound from "@/page/NotFound";
 import type { TRole } from "@/types";
 import { generateRoutes } from "@/ults/generateRoutes";
 import { createBrowserRouter, Navigate } from "react-router";
@@ -32,6 +34,10 @@ export const router = createBrowserRouter([
         path: "track-parcel",
         Component: TrackParcel,
       },
+      {
+        path: "contact",
+        Component: Contact,
+      },
     ],
   },
   {
@@ -45,6 +51,10 @@ export const router = createBrowserRouter([
   {
     Component: UnAuthorized,
     path: "/unauthorized",
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 
   // admin routes
@@ -83,7 +93,7 @@ export const router = createBrowserRouter([
       {
         path: "",
         // index : true,
-        element: <Navigate to="/receiver" />,
+        element: <Navigate to="/receiver/receiver-overview" />,
       },
       ...generateRoutes(ReceiverSidebarItems),
     ],

@@ -1,35 +1,145 @@
-## 📚 Parcel Delivery Management Frontend
+# Parcel Delivery System (Frontend)
 
-A simple client site for Parcel Management System — built with **React js**, **TypeScript**, **Redux**, and **Shadcn**.
+Parcel Delivery System frontend built with React + TypeScript. It provides role-based dashboards for Admin, Sender, and Receiver, and communicates with a REST API via Redux Toolkit Query.
 
-#### 🛠️ Technologies used: React, Redux RTK-Query , TypeScript, ShadCN.
+## Live Demo
 
-#### ✨ Features :
+- https://parcel-delivery-system-frontend-delta.vercel.app/
 
-- JWT-based login system with Seperate Dahsboard: admin | sender | receiver
+## Key Features
 
-- Senders can:
+- Role-based authentication (Admin / Sender / Receiver)
+- JWT-based login flow
+- Sender dashboard
+  - Create parcel delivery requests
+  - Cancel a parcel (when not dispatched)
+  - View created parcels
+- Receiver dashboard
+  - View incoming parcels
+  - Confirm delivery
+  - View delivery history
+- Admin dashboard
+  - View/manage users and parcels
+  - Block/unblock users
+  - Update parcel statuses (e.g., Approved, In Transit, Delivered)
 
-* Create parcel delivery requests
-* Cancel parcel (if not dispatched)
-* View all their parcels.
+## Tech Stack
 
-- Receivers can:
+- React (Vite)
+- TypeScript
+- Redux Toolkit + RTK Query
+- Tailwind CSS + shadcn/ui (Radix UI)
+- React Router
 
-* View incoming parcels
-* Confirm parcel delivery
-* Delivery history
+## Getting Started
 
-- Admins can:
+### Prerequisites
 
-* View and manage all users and parcels
-* Block or unblock users or parcels
-* Change parcel status (e.g., Approved, In Transit, Delivered)
+- Node.js (LTS recommended)
+- npm (comes with Node)
 
-#### ⚙️ How to Set Up Locally
+### Installation
 
-- First you have to install node and github in your machine.
-- then git clone the repository or download the zip file
-- in root folder go to the terminal, hit - `npm i` then `npm run dev`
-- copy `.env.example` to `.env` and in the `.env` file give your credentials.
-- to go the url `http://localhost:5173/` in your browser.
+```bash
+git clone <your-repo-url>
+cd Parcel-Delivery-system-frontend
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file in the project root (you can copy from `.env.example`).
+
+Required:
+
+```bash
+VITE_BASE_URL=http://localhost:5000/api
+```
+
+Optional (used for demo/prefill in UI if implemented in the app):
+
+```bash
+VITE_DEMO_ADMIN_EMAIL=
+VITE_DEMO_ADMIN_PASSWORD=
+
+VITE_DEMO_SENDER_EMAIL=
+VITE_DEMO_SENDER_PASSWORD=
+
+VITE_DEMO_RECEIVER_EMAIL=
+VITE_DEMO_RECEIVER_PASSWORD=
+```
+
+### Run Locally
+
+1. Create your environment file:
+
+```bash
+copy .env.example .env
+```
+
+2. Update `VITE_BASE_URL` in `.env` to your backend API URL.
+
+3. Start the dev server:
+
+```bash
+npm run dev
+```
+
+Then open:
+
+- http://localhost:5173/
+
+## Available Scripts
+
+- `npm run dev` — start the development server
+- `npm run build` — type-check and build for production
+- `npm run preview` — preview the production build locally
+- `npm run lint` — run ESLint across the project
+
+## Project Structure (High Level)
+
+- `src/components` — UI and feature components (layout, modules, ui)
+- `src/page` — route-level pages grouped by role
+- `src/redux` — store setup + RTK Query APIs
+- `src/routes` — route configuration and sidebar items
+- `src/config` — app configuration (API base URL)
+
+### Folder Structure (src)
+
+```text
+src/
+  assets/
+  components/
+    layout/
+    modules/
+    provider/
+    ui/
+  config/
+  constant/
+  hooks/
+  lib/
+  page/
+    admin/
+    receiver/
+    sender/
+  redux/
+    features/
+      auth/
+      parcel/
+  routes/
+  types/
+  ults/
+  App.tsx
+  main.tsx
+  index.css
+```
+
+## Deployment Notes (Vercel)
+
+- Set `VITE_BASE_URL` in your Vercel environment variables to point at your deployed backend API.
+- Build command: `npm run build`
+- Output directory: `dist`
+
+## License
+
+This project is provided for educational purposes.

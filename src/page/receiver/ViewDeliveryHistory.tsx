@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SkeletonTable from "@/components/provider/SkeletonTable";
+import Pagination from "@/components/ui/pagination";
 import { useGetReceiverParcelsQuery } from "@/redux/features/parcel/parcel.api";
 
 const ViewDeliveryHistory = () => {
@@ -18,13 +20,21 @@ const ViewDeliveryHistory = () => {
 
   const totalItems = deliveredParcels.length;
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedParcels = deliveredParcels.slice(startIndex, endIndex);
+
   if (isLoading) {
     return <SkeletonTable />;
   }
 
   return (
     <div>
-      <div className="max-w-6xl mx-auto mt-8 border border-slate-400 rounded-lg shadow">
+      <div className="max-w-7xl mx-auto mt-8 border border-slate-400 rounded-lg shadow">
         <h1 className="text-center py-4 text-xl font-semibold">
           All My Delivered Parcels ({totalItems})
         </h1>
@@ -46,7 +56,7 @@ const ViewDeliveryHistory = () => {
 
           <TableBody>
             {deliveredParcels.length > 0 ? (
-              deliveredParcels.map((item: any) => (
+              paginatedParcels.map((item: any) => (
                 <TableRow key={item._id}>
                   <TableCell>{item.trackingId}</TableCell>
                   <TableCell>{item.type}</TableCell>
@@ -88,6 +98,14 @@ const ViewDeliveryHistory = () => {
             )}
           </TableBody>
         </Table>
+
+        {deliveredParcels.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

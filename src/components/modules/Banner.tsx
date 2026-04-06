@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Truck, Package, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router";
 
 const Banner = () => {
   return (
@@ -30,17 +31,19 @@ const Banner = () => {
           </p>
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
             <Button
+              asChild
               size="lg"
-              className="bg-amber-400 hover:bg-amber-500 text-black font-semibold"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md"
             >
-              Book a Delivery
+              <Link to="/sender/created-parcels">Create Parcel Request</Link>
             </Button>
             <Button
+              asChild
               size="lg"
               variant="outline"
-              className="border-slate-400 text-white hover:bg-slate-700"
+              className="border-blue-400 bg-white  text-blue-950 hover:bg-blue-500/10 hover:text-white"
             >
-              Track Parcel
+              <Link to="/track-parcel">Track Parcel</Link>
             </Button>
           </div>
         </motion.div>
@@ -71,7 +74,7 @@ const Banner = () => {
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
-            className="absolute top-10 right-16 bg-slate-700/60 p-3 rounded-full border border-slate-600"
+            className="absolute -top-5 right-16 bg-slate-700/60 p-3 rounded-full border border-slate-600"
           >
             <MapPin className="text-amber-400 w-6 h-6" />
           </motion.div>

@@ -68,4 +68,5 @@ export const {
   useUserInfoQuery,
   useLogoutMutation,
   useLazyGetReceiverQuery,
+  useLazyUserInfoQuery,
 } = authApi;

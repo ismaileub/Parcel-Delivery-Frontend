@@ -14,12 +14,12 @@ import { useGetAllUsersQuery } from "@/redux/features/auth/auth.api";
 
 const AllUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   // Pass a new object each time and force refetch when args change
   const { data, isLoading } = useGetAllUsersQuery(
     { page: currentPage, limit: itemsPerPage },
-    { refetchOnMountOrArgChange: true }
+    { refetchOnMountOrArgChange: true },
   );
 
   if (isLoading) return <SkeletonTable />;
@@ -55,8 +55,8 @@ const AllUsers = () => {
                     user.role === "ADMIN"
                       ? "bg-purple-200 text-purple-800"
                       : user.role === "SENDER"
-                      ? "bg-blue-200 text-blue-800"
-                      : "bg-green-200 text-green-800"
+                        ? "bg-blue-200 text-blue-800"
+                        : "bg-green-200 text-green-800"
                   }`}
                 >
                   {user.role}

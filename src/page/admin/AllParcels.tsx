@@ -45,7 +45,7 @@ const SORT_OPTIONS = [
 
 const AllParcels = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 7;
   const [sortOption, setSortOption] = useState(SORT_OPTIONS[0].value);
 
   const [sortBy, sortOrder] = sortOption.split("_");
@@ -59,7 +59,7 @@ const AllParcels = () => {
     },
     {
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   const { data: userData } = useUserInfoQuery(undefined);
@@ -151,10 +151,10 @@ const AllParcels = () => {
                     parcel.currentStatus === "Pending"
                       ? "bg-yellow-200 text-yellow-800"
                       : parcel.currentStatus === "Delivered"
-                      ? "bg-green-200 text-green-800"
-                      : parcel.currentStatus === "Cancelled"
-                      ? "bg-red-600 text-white"
-                      : "bg-gray-200 text-gray-800"
+                        ? "bg-green-200 text-green-800"
+                        : parcel.currentStatus === "Cancelled"
+                          ? "bg-red-600 text-white"
+                          : "bg-gray-200 text-gray-800"
                   }`}
                 >
                   {parcel.currentStatus}
